@@ -22,6 +22,7 @@ class FakeWorker:
         self.ident = (1, 2, 3)
         self.disconnected = False
         self.writes = []
+        self.failure = None
 
     def identity(self):
         return self.ident
@@ -31,6 +32,8 @@ class FakeWorker:
             raise APIError(502, 'Disconnected')
         if method == 'PUT':
             self.writes.append((method, path, deepcopy(data)))
+            if self.failure:
+                raise self.failure
             if data.get('invalid'):
                 raise APIError(400, 'Invalid configuration', {'detail': 'Unknown parameter'})
             self.config = deepcopy(data)
@@ -176,6 +179,19 @@ class DashboardTests(DashboardFixture):
             self.app.change('configuration', {'value': {'invalid': True}, 'revision': revision(original)})
         self.assertEqual(self.worker.config, original)
         self.assertEqual(self.app.history()[0]['result'], 'failed')
+
+    def test_worker_error_detail_is_kept_as_detail(self):
+        original = deepcopy(self.worker.config)
+        self.worker.failure = APIError(
+            500,
+            'Failed to apply new configuration.',
+            'bind("127.0.0.1:8080") failed Address already in use',
+        )
+        with self.assertRaises(APIError) as context:
+            self.app.change('configuration', {'value': original,
+                                               'revision': revision(original)})
+        self.assertEqual(context.exception.detail,
+                         'bind("127.0.0.1:8080") failed Address already in use')
         self.assertEqual(self.app.record(self.app.history()[0]['id'])['before'], original)
 
     def test_restart_maps_to_control_get_without_config_write(self):

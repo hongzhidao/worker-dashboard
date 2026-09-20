@@ -127,7 +127,7 @@ async function main() {
     await page.locator("#dialog [data-action=apply]").click();
     await page
       .locator("#dialog-error")
-      .filter({ hasText: "操作未完成" })
+      .filter({ hasText: "bind(" })
       .waitFor();
     expectedFailure = false;
     assert.equal(

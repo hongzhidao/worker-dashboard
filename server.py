@@ -93,7 +93,8 @@ class Worker:
                 raise APIError(502, 'Worker response is too large.')
             value = json.loads(raw)
             if response.status >= 400:
-                raise APIError(response.status, value.get('error', 'Worker rejected the request.'), value)
+                raise APIError(response.status, value.get('error', 'Worker rejected the request.'),
+                               value.get('detail'))
             return value
         except (OSError, http.client.HTTPException, ValueError) as error:
             raise APIError(502, 'Cannot connect to Worker control socket.', str(error)) from error
