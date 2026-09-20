@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Worker Dashboard</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <section id="login" class="login-screen" hidden>
+      <form id="login-form" class="login-form">
+        <div class="brand">
+          <span class="brand-mark"
+            ><svg class="icon"><use href="/icons.svg#layers-2"></use></svg
+          ></span>
+          <h1>Worker Dashboard</h1>
+        </div>
+        <p id="login-instance" class="muted"></p>
+        <label
+          >管理员口令<input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            autofocus
+        /></label>
+        <p id="login-error" class="error-text" role="alert"></p>
+        <button class="button primary" type="submit">
+          登录<svg class="icon"><use href="/icons.svg#arrow-right"></use></svg>
+        </button>
+      </form>
+    </section>
+    <div id="app" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="#/overview"
+          ><span class="brand-mark"
+            ><svg class="icon">
+              <use href="/icons.svg#layers-2"></use></svg></span
+          ><span>Worker Dashboard</span></a
+        >
+        <div class="workspace">
+          <svg class="icon"><use href="/icons.svg#server"></use></svg
+          ><strong id="instance">Worker</strong>
+        </div>
+        <nav aria-label="主导航">
+          <a href="#/overview" data-nav="overview"
+            ><svg class="icon">
+              <use href="/icons.svg#layout-dashboard"></use></svg
+            >总览</a
+          >
+          <a href="#/apps" data-nav="apps"
+            ><svg class="icon"><use href="/icons.svg#boxes"></use></svg
+            >应用<span id="app-count" class="nav-count"></span
+          ></a>
+          <a href="#/config" data-nav="config"
+            ><svg class="icon">
+              <use href="/icons.svg#sliders-horizontal"></use></svg
+            >配置</a
+          >
+          <a href="#/history" data-nav="history"
+            ><svg class="icon"><use href="/icons.svg#history"></use></svg
+            >变更记录</a
+          >
+        </nav>
+        <div class="sidebar-bottom">
+          <span id="sidebar-status"></span
+          ><button class="text-button" data-action="logout">
+            <svg class="icon"><use href="/icons.svg#log-out"></use></svg
+            >退出登录
+          </button>
+        </div>
+      </aside>
+      <div class="main">
+        <header class="topbar">
+          <div id="breadcrumb">工作空间 / 总览</div>
+          <div class="top-actions">
+            <span id="connection"></span><span id="updated" class="muted"></span
+            ><button
+              class="icon-button"
+              title="刷新"
+              aria-label="刷新"
+              data-action="refresh"
+            >
+              <svg class="icon"><use href="/icons.svg#refresh-cw"></use></svg>
+            </button>
+          </div>
+        </header>
+        <div
+          id="connection-error"
+          class="connection-error"
+          role="status"
+          hidden
+        ></div>
+        <main id="content"><div class="empty">正在连接 Worker…</div></main>
+      </div>
+    </div>
+    <dialog id="dialog" aria-labelledby="dialog-title">
+      <div class="dialog-heading">
+        <h2 id="dialog-title"></h2>
+        <button
+          class="icon-button"
+          data-action="close-dialog"
+          title="关闭"
+          aria-label="关闭"
+        >
+          <svg class="icon"><use href="/icons.svg#x"></use></svg>
+        </button>
+      </div>
+      <div id="dialog-body"></div>
+      <p id="dialog-error" class="error-text" role="alert"></p>
+      <div id="dialog-actions" class="dialog-actions"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
